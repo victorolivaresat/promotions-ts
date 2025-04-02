@@ -6,7 +6,6 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
   return date.format("YYYY-MM-DD HH:mm:ss.SSS");
 };
 
-// Option 1: Passing parameters separately
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -17,10 +16,13 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
     timezone: "America/Lima",
     charset: "UTF-8",
+    define: {
+      timestamps: true,
+    },
+    logging: false,
   }
 );
 
-// Option 2: Using a connection URI
 const initializeDatabase = async () => {
   try {
     await sequelize.authenticate();

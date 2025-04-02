@@ -1,11 +1,7 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = require("../../config/database");
+const { sequelize } = require("../../config/database");
 
-class User extends Model {
-  /*
-  * Models
-  */
-}
+class User extends Model {}
 
 User.init(
   {
@@ -36,6 +32,11 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: true,
@@ -46,14 +47,9 @@ User.init(
       allowNull: true,
       defaultValue: DataTypes.NOW,
     },
-    deletedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
   },
   {
     sequelize,
-    paranoid: true,
     modelName: "User",
     tableName: "users",
     timestamps: true,
