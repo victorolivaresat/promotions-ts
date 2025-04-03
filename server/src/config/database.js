@@ -1,5 +1,8 @@
 const { Sequelize } = require("sequelize");
-require("dotenv").config();
+const config = require("./database.json");
+
+const env = process.env.NODE_ENV || "development";
+const dbConfig = config[env];
 
 Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
   date = this._applyTimezone(date, options);
@@ -7,13 +10,13 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 };
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
   {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT,
+    host: dbConfig.host,
+    dialect: dbConfig.dialect,
+    port: dbConfig.port || 5432,
     timezone: "America/Lima",
     charset: "UTF-8",
     define: {

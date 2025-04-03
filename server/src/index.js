@@ -1,17 +1,16 @@
 const cookieParser = require("cookie-parser");
+const config = require("./config/app.json");
 const routes = require("./routes");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const http = require("http");
-require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
 
-
 // Puerto de la aplicación
-const port = process.env.PORT || process.env.APP_PORT;
+const port = process.env.PORT || config.APP_PORT;
 
 // Middlewares
 app.use(morgan("dev"));
@@ -27,7 +26,7 @@ app.use((err, req, res, next) => {
 // Función para habilitar CORS
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: config.CORS_ORIGIN,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
