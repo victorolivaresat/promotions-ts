@@ -35,3 +35,6 @@ coverage/
 # Archivos temporales y de depuración
 tmp/
 .out/
+
+
+iisnode/

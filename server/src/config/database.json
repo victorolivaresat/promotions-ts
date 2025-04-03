@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "password",
+    "username": "dbapf",
+    "password": "WJZ66$V@eNqCKRGuG*ZY",
     "database": "promotions-ts",
-    "host": "127.0.0.1",
+    "host": "192.168.21.35",
     "dialect": "postgres"
   },
   "test": {
@@ -14,10 +14,10 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "dbapf",
+    "password": "WJZ66$V@eNqCKRGuG*ZY",
+    "database": "promotions-ts",
+    "host": "192.168.21.35",
     "dialect": "postgres"
   }
 }
