@@ -36,5 +36,6 @@ coverage/
 tmp/
 .out/
 
-
+# Archivos de configuración de IIS y Node.js
 iisnode/
+config/app.json
