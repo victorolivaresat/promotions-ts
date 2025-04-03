@@ -1,6 +1,6 @@
 const { createToken } = require("../utils/jwt");
-const { Sequelize } = require('sequelize');
-const User = require('../models/User');
+const { Sequelize } = require("sequelize");
+const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -34,7 +34,6 @@ const login = async (req, res) => {
       userName: user.userName,
       email: user.email,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error during login" });
@@ -71,11 +70,11 @@ const verifyToken = async (req, res) => {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-      
+
       res.json({
         success: true,
         message: "Token is valid",
-        userId: user.userId,
+        userId: user.id,
         userName: user.userName,
         nationalId: user.nationalId,
       });
