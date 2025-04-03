@@ -31,6 +31,7 @@ const login = async (req, res) => {
       userId: user.id,
       userName: user.userName,
       email: user.email,
+      role: user.role,
       token,
     });
   } catch (error) {
@@ -76,6 +77,7 @@ const verifyToken = async (req, res) => {
         userId: user.id,
         userName: user.userName,
         email: user.email,
+        role: user.role,
       });
     });
   } catch (error) {

@@ -28,7 +28,7 @@ const schema = yup.object().shape({
 });
 
 const BonusComponent = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, hasRole } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -166,6 +166,10 @@ const BonusComponent = () => {
       toast.error(error.message || 'Error al canjear el bono');
     }
   };
+
+  if (!hasRole('admin') && !hasRole('user')) {
+    return <p>No tienes permiso para ver esta página.</p>;
+  }
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">

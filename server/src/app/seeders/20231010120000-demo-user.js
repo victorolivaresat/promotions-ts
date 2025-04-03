@@ -12,6 +12,7 @@ module.exports = {
         userName: 'victor.olivares',
         nationalId: '44556494',
         password: await bcrypt.hash('password', 10),
+        role: 'admin',
         createdAt: new Date(),
         updatedAt: new Date(),
       }

@@ -18,8 +18,8 @@ export const AuthProvider = ({ children }) => {
       console.log("Datos recibidos del backend:", data);
 
       if (data) {
-        const { userId, userName, email, token } = data;
-        setCurrentUser({ userId, userName, email });
+        const { userId, userName, email, role, token } = data;
+        setCurrentUser({ userId, userName, email, role });
         setIsAuthenticated(true);
         cookie.set("token", token);
         toast.success("¡Bienvenido!");
@@ -48,6 +48,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const hasRole = (role) => {
+    if (!currentUser || !currentUser.role) return false;
+    return currentUser.role === role;
+  };
+
   useEffect(() => {
     const checkLoginStatus = async () => {
       const cookies = cookie.get();
@@ -67,10 +72,10 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        const { userId, userName, email } = res;
-        console.log("Usuario verificado:", { userId, userName, email });
+        const { userId, userName, email, role } = res;
+        console.log("Usuario verificado:", { userId, userName, email, role });
 
-        setCurrentUser({ userId, userName, email });
+        setCurrentUser({ userId, userName, email, role });
         setIsAuthenticated(true);
       } catch (error) {
         console.log(error);
@@ -92,6 +97,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         logoutUser,
         loginUser,
+        hasRole,
       }}
     >
       {children}

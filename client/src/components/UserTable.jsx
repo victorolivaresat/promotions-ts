@@ -1,12 +1,12 @@
-import { useState, useMemo } from "react";
 import ExportToExcel from "./ExportToExcel";
+import { useState, useMemo } from "react";
 import {
+  flexRender,
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
-  flexRender,
 } from "@tanstack/react-table";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
@@ -39,11 +39,13 @@ const UserTable = ({ users, onEdit, onDelete, onToggleStatus }) => {
                 checked={row.original.isActive}
                 onChange={() => onToggleStatus(row.original.id)}
               />
-              <div className={`relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 ${
-                row.original.isActive
-                  ? "peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:bg-green-600"
-                  : "peer-focus:ring-red-300 dark:peer-focus:ring-red-800 peer-checked:bg-red-600"
-              } peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
+              <div
+                className={`relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 ${
+                  row.original.isActive
+                    ? "peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:bg-green-600"
+                    : "peer-focus:ring-red-300 dark:peer-focus:ring-red-800 peer-checked:bg-red-600"
+                } peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}
+              ></div>
               <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                 {row.original.isActive ? "Activo" : "Inactivo"}
               </span>
@@ -89,12 +91,13 @@ const UserTable = ({ users, onEdit, onDelete, onToggleStatus }) => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Usuarios</h2>
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex justify-between">
+        <h2 className="text-2xl font-bold mb-4">Usuarios</h2>
+        <div className="flex items-center gap-2">
         <input
           type="text"
           placeholder="Buscar..."
-          className="border rounded p-2 w-1/5"
+          className="border-3 border-gray-200 p-1"
           onChange={(e) => setGlobalFilter(e.target.value || undefined)}
         />
         <ExportToExcel
@@ -102,6 +105,7 @@ const UserTable = ({ users, onEdit, onDelete, onToggleStatus }) => {
           fileName="usuarios"
           sheetName="Usuarios"
         />
+        </div>
       </div>
       <table className="table-auto w-full text-xs border-collapse border border-gray-300">
         <thead className="bg-gray-200">

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 import {
   getAllUsers,
   createUser,
@@ -6,14 +7,16 @@ import {
   deleteUser,
   toggleUserStatus,
 } from "../../api/user";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
 import UserTable from "../../components/UserTable";
 import Modal from "../../components/Modal";
-import { FaPlus }   from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { FaPlus, FaUser, FaEnvelope, FaIdCard, FaLock, FaUserTag } from "react-icons/fa";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const UserPage = () => {
+  const { hasRole } = useContext(AuthContext);
+
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -36,7 +39,11 @@ const UserPage = () => {
   const handleCreateOrUpdate = async (data) => {
     try {
       if (editingUser) {
-        await updateUser(editingUser.id, data);
+        const { password, ...userData } = data;
+        if (password) {
+          userData.password = password;
+        }
+        await updateUser(editingUser.id, userData);
         toast.success("Usuario actualizado correctamente");
       } else {
         await createUser(data);
@@ -91,9 +98,13 @@ const UserPage = () => {
     if (user) {
       reset(user);
     } else {
-      reset();
+      reset({ name: "", email: "", userName: "", nationalId: "", password: "", role: "" }); 
     }
   };
+
+  if (!hasRole("admin")) {
+    return <p>No tienes permiso para ver esta página.</p>;
+  }
 
   return (
     <div className="p-4">
@@ -104,7 +115,7 @@ const UserPage = () => {
         <FaPlus className="inline mr-2" />
         Crear Usuario
       </button>
-      <div className="mt-4">
+      <div className="mt-4 bg-white shadow-md rounded-lg">
         <UserTable
           users={users}
           onEdit={openModal}
@@ -120,34 +131,72 @@ const UserPage = () => {
           onCancel={() => setIsModalOpen(false)}
         >
           <form className="flex flex-col gap-4">
-            <input
-              {...register("name", { required: true })}
-              placeholder="Nombre"
-              className="p-2 border border-gray-300 rounded"
-            />
-            <input
-              {...register("email", { required: true })}
-              placeholder="Email"
-              className="p-2 border border-gray-300 rounded"
-            />
-            <input
-              {...register("userName", { required: true })}
-              placeholder="Usuario"
-              className="p-2 border border-gray-300 rounded"
-            />
-            <input
-              {...register("nationalId", { required: true })}
-              placeholder="ID Nacional"
-              className="p-2 border border-gray-300 rounded"
-            />
-            {!editingUser && (
+            <div className="flex items-center gap-2">
+              <FaUser className="text-gray-500" />
               <input
-                {...register("password", { required: true })}
-                type="password"
-                placeholder="Contraseña"
-                className="p-2 border border-gray-300 rounded"
+                {...register("name", { required: true })}
+                placeholder="Nombre"
+                className="p-2 border border-gray-300 rounded w-full"
               />
+            </div>
+            <div className="flex items-center gap-2">
+              <FaEnvelope className="text-gray-500" />
+              <input
+                {...register("email", { required: true })}
+                placeholder="Email"
+                className="p-2 border border-gray-300 rounded w-full"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <FaUser className="text-gray-500" />
+              <input
+                {...register("userName", { required: true })}
+                placeholder="Usuario"
+                className="p-2 border border-gray-300 rounded w-full"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <FaIdCard className="text-gray-500" />
+              <input
+                {...register("nationalId", { required: true })}
+                placeholder="ID Nacional"
+                className="p-2 border border-gray-300 rounded w-full"
+              />
+            </div>
+            {!editingUser && (
+              <div className="flex items-center gap-2">
+                <FaLock className="text-gray-500" />
+                <input
+                  {...register("password", { required: true })}
+                  type="password"
+                  placeholder="Contraseña"
+                  className="p-2 border border-gray-300 rounded w-full"
+                />
+              </div>
             )}
+            {editingUser && (
+              <div className="flex items-center gap-2">
+                <FaLock className="text-gray-500" />
+                <input
+                  {...register("password")}
+                  type="password"
+                  placeholder="Nueva Contraseña (opcional)"
+                  className="p-2 border border-gray-300 rounded w-full"
+                />
+              </div>
+            )}
+            <div className="flex items-center gap-2">
+              <FaUserTag className="text-gray-500" />
+              <select
+                {...register("role", { required: true })}
+                className="p-2 border border-gray-300 rounded w-full"
+              >
+                <option value="">Seleccionar Rol</option>
+                <option value="admin">Admin</option>
+                <option value="user">Usuario</option>
+                <option value="supervisor">Supervisor</option>
+              </select>
+            </div>
           </form>
         </Modal>
       )}

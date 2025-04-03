@@ -77,21 +77,36 @@ const Report = () => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  // Función para formatear filas antes de exportarlas
+  const formatRowsForExport = (rows) => {
+    return rows.map((row) => {
+      const formattedRow = { ...row.original };
+      if (formattedRow.redeemedAt) {
+        formattedRow.redeemedAt = format(new Date(formattedRow.redeemedAt), "dd/MM/yyyy HH:mm");
+      }
+      return formattedRow;
+    });
+  };
+
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Reporte de Tickets de Apuesta</h2>
-      <div className="mb-4 flex justify-end">
-        <input
-          type="text"
-          placeholder="Buscar..."
-          className="border rounded p-2 w-1/5"
-          onChange={(e) => table.setGlobalFilter(e.target.value || undefined)}
-        />
-        <ExportToExcel
-          data={table.getFilteredRowModel().rows.map((row) => row.original)}
-          fileName="reporte_tickets"
-          sheetName="Tickets"
-        />
+      <div className="mb-4 flex justify-between">
+        <h2 className="text-2xl font-bold mb-4">
+          Reporte de Tickets de Apuesta
+        </h2>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Buscar..."
+            className="border-3 border-gray-200 p-1"
+            onChange={(e) => table.setGlobalFilter(e.target.value || undefined)}
+          />
+          <ExportToExcel
+            data={formatRowsForExport(table.getFilteredRowModel().rows)}
+            fileName="reporte_tickets"
+            sheetName="Tickets"
+          />
+        </div>
       </div>
       <table className="table-auto w-full text-xs border-collapse border border-gray-300">
         <thead className="bg-gray-200">

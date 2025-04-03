@@ -19,10 +19,9 @@ const ExportToExcel = ({ data, fileName = "reporte", sheetName = "Datos" }) => {
   return (
     <button
       onClick={handleExport}
-      className="ml-2 px-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
+      className="p-2 bg-green-500 text-white hover:bg-green-600 text-sm"
     >
-      <FaFileExcel className="inline me-2" />
-      Excel
+      <FaFileExcel className="inline" />
     </button>
   );
 };
