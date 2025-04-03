@@ -21,7 +21,7 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="#" className="block p-2 rounded hover:bg-gray-700">
+            <a href="/user" className="block p-2 rounded hover:bg-gray-700">
               <FaUser className="inline mr-2" />
               Usuarios
             </a>

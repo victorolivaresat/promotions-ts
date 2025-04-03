@@ -1,96 +1,106 @@
-import { useEffect, useState, useMemo } from "react";
-import { getBetTicketsReport } from "../api/report";
+import { useState, useMemo } from "react";
 import ExportToExcel from "./ExportToExcel";
-import { format } from "date-fns";
 import {
+  useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
-  useReactTable,
   flexRender,
 } from "@tanstack/react-table";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
-const Report = () => {
-  const [rows, setRows] = useState([]);
+const UserTable = ({ users, onEdit, onDelete, onToggleStatus }) => {
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "bonusCode",
-        header: "Código del Bono",
+        header: "Nombre",
+        accessorKey: "name",
       },
       {
-        accessorKey: "redeemedBy",
-        header: "Canjeado Por",
+        header: "Email",
+        accessorKey: "email",
       },
       {
-        accessorKey: "redeemedAt",
-        header: "Fecha de Canje",
-        cell: ({ getValue }) => {
-          const rawDate = getValue();
-          return rawDate ? format(new Date(rawDate), "dd/MM/yyyy HH:mm") : "-";
-        },
+        header: "Usuario",
+        accessorKey: "userName",
       },
       {
-        accessorKey: "documentNumber",
-        header: "Número de Documento",
+        header: "Estado",
+        accessorKey: "isActive",
+        cell: ({ row }) => (
+          <div className="flex justify-center">
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={row.original.isActive}
+                onChange={() => onToggleStatus(row.original.id)}
+              />
+              <div className={`relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 ${
+                row.original.isActive
+                  ? "peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:bg-green-600"
+                  : "peer-focus:ring-red-300 dark:peer-focus:ring-red-800 peer-checked:bg-red-600"
+              } peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
+              <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                {row.original.isActive ? "Activo" : "Inactivo"}
+              </span>
+            </label>
+          </div>
+        ),
       },
       {
-        accessorKey: "documentType",
-        header: "Tipo de Documento",
-      },
-      {
-        accessorKey: "clientName",
-        header: "Nombre del Cliente",
-      },
-      {
-        accessorKey: "ticketCode",
-        header: "Código del Ticket",
+        header: "Acciones",
+        cell: ({ row }) => (
+          <div className="flex justify-center gap-2">
+            <button
+              className="p-2 text-sm text-white bg-blue-500 flex items-center gap-1"
+              onClick={() => onEdit(row.original)}
+            >
+              <FaEdit />
+            </button>
+            <button
+              className="p-2 text-sm text-white bg-red-500 flex items-center gap-1"
+              onClick={() => onDelete(row.original.id)}
+            >
+              <FaTrash />
+            </button>
+          </div>
+        ),
       },
     ],
-    []
+    [onEdit, onDelete, onToggleStatus]
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getBetTicketsReport();
-        setRows(response.data);
-      } catch (error) {
-        console.error(
-          "Error al obtener el reporte de tickets de apuesta:",
-          error
-        );
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const table = useReactTable({
-    data: rows,
+    data: users,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      globalFilter,
+    },
+    onGlobalFilterChange: setGlobalFilter,
   });
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Reporte de Tickets de Apuesta</h2>
+      <h2 className="text-2xl font-bold mb-4">Usuarios</h2>
       <div className="mb-4 flex justify-end">
         <input
           type="text"
           placeholder="Buscar..."
           className="border rounded p-2 w-1/5"
-          onChange={(e) => table.setGlobalFilter(e.target.value || undefined)}
+          onChange={(e) => setGlobalFilter(e.target.value || undefined)}
         />
         <ExportToExcel
           data={table.getFilteredRowModel().rows.map((row) => row.original)}
-          fileName="reporte_tickets"
-          sheetName="Tickets"
+          fileName="usuarios"
+          sheetName="Usuarios"
         />
       </div>
       <table className="table-auto w-full text-xs border-collapse border border-gray-300">
@@ -130,9 +140,7 @@ const Report = () => {
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className={`border border-gray-300 px-4 py-2 ${
-                    cell.column.id === "bonusCode" ? "text-green-500" : ""
-                  }`}
+                  className="border border-gray-300 px-4 py-2 text-center"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
@@ -170,4 +178,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default UserTable;

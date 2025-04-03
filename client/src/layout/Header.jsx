@@ -5,7 +5,7 @@ import { useContext } from "react";
 const Header = () => {
   const { currentUser, logoutUser } = useContext(AuthContext);
   return (
-    <header className="h-16 bg-gray-100 text-white flex items-center justify-between px-4 border-b border-gray-300">
+    <header className="h-16 bg-white text-white flex items-center justify-between px-4 border-b border-gray-300">
       <div className="text-xl font-bold text-gray-600">
         {currentUser ? `Bienvenido, ${currentUser.userName}` : "Bienvenido"}
       </div>

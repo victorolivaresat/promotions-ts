@@ -12,6 +12,7 @@ import Dashboard from "../pages/Dashboard";
 import Report from "../pages/Report";
 import Bonus from "../pages/Bonus";
 import Login from "../pages/Login";
+import User from "../pages/User";
 
 const AppRoutes = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -38,6 +39,7 @@ const AppRoutes = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/bonus" element={<Bonus />} />
             <Route path="/report" element={<Report />} />
+            <Route path="/user" element={<User />} />
 
             {/* Rutas de error */}
             <Route path="*" element={<NotFound />} />
