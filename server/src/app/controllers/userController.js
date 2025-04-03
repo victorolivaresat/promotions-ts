@@ -77,6 +77,9 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+    if (id === "1") {
+      return res.status(403).json({ message: "No se puede eliminar al usuario con ID 1" });
+    }
     const user = await User.findByPk(id);
     if (!user)
       return res.status(404).json({ message: "Usuario no encontrado" });
@@ -91,6 +94,9 @@ const deleteUser = async (req, res) => {
 const toggleUserStatus = async (req, res) => {
   try {
     const { id } = req.params;
+    if (id === "1") {
+      return res.status(403).json({ message: "No se puede cambiar el estado del usuario con ID 1" });
+    }
     const user = await User.findByPk(id);
     if (!user)
       return res.status(404).json({ message: "Usuario no encontrado" });
