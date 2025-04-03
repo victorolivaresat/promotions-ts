@@ -1,4 +1,5 @@
 const { createToken } = require("../utils/jwt");
+const { Sequelize } = require('sequelize');
 const User = require('../models/User');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -10,7 +11,7 @@ const login = async (req, res) => {
 
     const user = await User.findOne({
       where: {
-        [User.sequelize.Op.or]: [{ userName: identifier }, { email: identifier }],
+        [Sequelize.Op.or]: [{ userName: identifier }, { email: identifier }], // Asegúrate de usar Sequelize.Op.or correctamente
       },
     });
 
@@ -35,7 +36,7 @@ const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ error: "Error during login" });
   }
 };

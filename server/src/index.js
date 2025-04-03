@@ -7,8 +7,9 @@ const path = require("path");
 const http = require("http");
 require("dotenv").config();
 
-const server = http.createServer();
 const app = express();
+const server = http.createServer(app);
+
 
 // Puerto de la aplicación
 const port = process.env.PORT || process.env.APP_PORT;
@@ -18,8 +19,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use("/public", express.static(path.join(__dirname, "../public")));
-app.use("/images", express.static(path.join(__dirname, "../src/public/images")));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
