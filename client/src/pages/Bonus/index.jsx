@@ -17,7 +17,7 @@ const schema = yup.object().shape({
       const documentType = this.parent.documentType;
       if (documentType === 'DNI') {
         return /^\d{8}$/.test(value); 
-      } else if (documentType === 'CE' || documentType === 'Pasaporte') {
+      } else if (documentType === 'CE' || documentType === 'PASAPORTE') {
         return value.length <= 20; 
       }
       return true;
@@ -173,7 +173,7 @@ const BonusComponent = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {[
           { label: 'Código del Bono', name: 'bonusCode', type: 'text', withValidateButton: true, readOnly: isBonusCodeReadOnly },
-          { label: 'Tipo de Documento', name: 'documentType', type: 'select', options: ['DNI', 'Pasaporte', 'CE'] },
+          { label: 'Tipo de Documento', name: 'documentType', type: 'select', options: ['DNI', 'PASAPORTE', 'CE'] },
           { label: 'Número de Documento', name: 'documentNumber', type: 'text', withSearchButton: true },
           { label: 'Nombre Completo', name: 'fullName', type: 'text', readOnly: documentType === 'DNI' },
           { label: 'Código del Ticket', name: 'ticketCode', type: 'text' },
