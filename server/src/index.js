@@ -1,4 +1,3 @@
-const { connect } = require("./config/database");
 const cookieParser = require("cookie-parser");
 const routes = require("./routes");
 const express = require("express");
@@ -39,10 +38,6 @@ app.use(
 
 /*Routers*/
 app.use("/api/v1", routes);
-
-
-// Conexión a la base de datos
-connect();
 
 // Start server
 server.listen(port, () => {

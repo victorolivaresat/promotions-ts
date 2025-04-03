@@ -14,24 +14,14 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      isRegistered: {
+      isRedeemed: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
       },
-      registeredAt: {
+      redeemedAt: {
         type: Sequelize.DATE,
         allowNull: true,
-      },
-      registeredBy: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
       },
       createdAt: {
         type: Sequelize.DATE,

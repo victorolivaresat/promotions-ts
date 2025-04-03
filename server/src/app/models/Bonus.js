@@ -15,22 +15,14 @@ Bonus.init(
       allowNull: false,
       unique: true,
     },
-    isRegistered: {
+    isRedeemed: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
-    registeredAt: {
+    redeemedAt: {
       type: DataTypes.DATE,
       allowNull: true,
-    },
-    registeredBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'users',
-        key: 'id',
-      },
     },
   },
   {
