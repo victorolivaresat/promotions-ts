@@ -37,6 +37,11 @@ User.init(
       allowNull: false,
       defaultValue: true,
     },
+    role: {
+      type: DataTypes.ENUM("admin", "supervisor", "user"),
+      allowNull: false,
+      defaultValue: "user",
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: true,

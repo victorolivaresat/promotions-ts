@@ -20,7 +20,7 @@ const DialyBonus = ({ dailyData }) => {
   };
 
   const series = [{
-    name: 'Bonos Redimidos',
+    name: 'Bonos Pagados',
     data: dailyData.map(data => parseInt(data.count, 10))
   }];
 
