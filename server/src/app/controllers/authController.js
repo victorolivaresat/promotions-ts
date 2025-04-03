@@ -2,7 +2,7 @@ const { createToken } = require("../utils/jwt");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-require("dotenv").config();
+const config = require("../../config/app.json"); // Cambiar a config
 
 // Login
 const login = async (req, res) => {
@@ -64,7 +64,7 @@ const verifyToken = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+    jwt.verify(token, config.JWT_SECRET, async (err, decodedToken) => { // Usar config.JWT_SECRET
       if (err) {
         return res.status(401).json({ error: "Unauthorized" });
       }

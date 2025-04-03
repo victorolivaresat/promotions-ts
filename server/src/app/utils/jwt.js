@@ -1,13 +1,13 @@
+const config = require("../../config/app.json");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const createToken = (payload) => {
   return new Promise((resolve, reject) => {
     jwt.sign(
       payload,
-      process.env.JWT_SECRET,
+      config.JWT_SECRET,
       {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: config.JWT_EXPIRES_IN,
       },
       (error, token) => {
         if (error) {
