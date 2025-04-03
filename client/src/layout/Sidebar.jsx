@@ -27,7 +27,7 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="#" className="block p-2 rounded hover:bg-gray-700">
+            <a href="/report" className="block p-2 rounded hover:bg-gray-700">
               <FaFileInvoice className="inline mr-2" />
               Reportes
             </a>

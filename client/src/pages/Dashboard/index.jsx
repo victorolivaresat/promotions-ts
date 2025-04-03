@@ -1,33 +1,76 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import BonusStatus from "../../components/BonusStatus";
+import DialyBonus from "../../components/DialyBonus";
+import Card from "../../components/Card"; // Importar el nuevo componente Card
+
+// Example mock data
+const mockBonusData = {
+  totalBonuses: 100,
+  redeemedBonuses: 40,
+  nonRedeemedBonuses: 60,
+  dailyRedeemedBonuses: [
+    { date: "2025-03-28", count: "5" },
+    { date: "2025-03-29", count: "8" },
+    { date: "2025-03-30", count: "12" },
+    { date: "2025-03-31", count: "7" },
+    { date: "2025-04-01", count: "6" },
+    { date: "2025-04-02", count: "2" },
+    { date: "2025-04-03", count: "0" },
+  ],
+};
 
 const Dashboard = () => {
+  const [bonusData, setBonusData] = useState(null);
+
+  useEffect(() => {
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await getBonusReport();
+    //     const {
+    //       totalBonuses,
+    //       redeemedBonuses,
+    //       nonRedeemedBonuses,
+    //       dailyRedeemedBonuses,
+    //     } = response.data;
+    //     setBonusData({
+    //       totalBonuses,
+    //       redeemedBonuses,
+    //       nonRedeemedBonuses,
+    //       dailyRedeemedBonuses,
+    //     });
+    //   } catch (error) {
+    //     console.error("Error al obtener los datos del reporte:", error);
+    //   }
+    // };
+
+    // fetchData();
+
+    // Usar datos simulados
+    setBonusData(mockBonusData);
+  }, []);
+
+  if (!bonusData) {
+    return <p>Cargando...</p>;
+  }
+
   return (
-    <>
-      <section className="bg-gray-700">
-        <div className="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
-          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
-            Promociones TS
-          </h1>
-          <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">
-            Validación de promociones trome
-          </p>
-          <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
-            <a
-              href="#"
-              className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
-            >
-              Empezar
-            </a>
-            <a
-              href="#"
-              className="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 sm:ms-4 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400"
-            >
-              Ver más
-            </a>
-          </div>
+    <div className="flex flex-col gap-5">
+      <div className="grid grid-cols-12 gap-5">
+        <div className="col-span-3">
+          <Card title="Estado de Bonos">
+            <BonusStatus
+              redeemed={bonusData.redeemedBonuses}
+              nonRedeemed={bonusData.nonRedeemedBonuses}
+            />
+          </Card>
         </div>
-      </section>
-    </>
+        <div className="col-span-9">
+          <Card title="Bonos Diarios">
+            <DialyBonus dailyData={bonusData.dailyRedeemedBonuses} />
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 };
 

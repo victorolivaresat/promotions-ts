@@ -9,6 +9,7 @@ import { useContext } from "react";
 // Importar las páginas protegidas
 import NotFound from "../pages/Error/NotFound";
 import Dashboard from "../pages/Dashboard";
+import Report from "../pages/Report";
 import Bonus from "../pages/Bonus";
 import Login from "../pages/Login";
 
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/bonus" element={<Bonus />} />
+            <Route path="/report" element={<Report />} />
 
             {/* Rutas de error */}
             <Route path="*" element={<NotFound />} />
