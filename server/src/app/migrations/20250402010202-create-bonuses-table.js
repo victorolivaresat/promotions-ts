@@ -19,6 +19,16 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       },
+      redeemedBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
       redeemedAt: {
         type: Sequelize.DATE,
         allowNull: true,

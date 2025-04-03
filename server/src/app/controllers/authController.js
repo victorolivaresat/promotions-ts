@@ -1,18 +1,16 @@
 const { createToken } = require("../utils/jwt");
-const { Sequelize } = require("sequelize");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+require("dotenv").config();
 
 // Login
 const login = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({
-      where: {
-        [Sequelize.Op.or]: [{ userName: identifier }, { email: identifier }], // Asegúrate de usar Sequelize.Op.or correctamente
-      },
+      where: { email },
     });
 
     if (!user) {
@@ -26,13 +24,14 @@ const login = async (req, res) => {
 
     const token = await createToken({ userId: user.id });
 
-    res.cookie("token", token);
+    // res.cookie("token", token);
 
     res.status(200).json({
       success: true,
       userId: user.id,
       userName: user.userName,
       email: user.email,
+      token,
     });
   } catch (error) {
     console.error(error);
@@ -60,7 +59,7 @@ const verifyToken = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    jwt.verify(token, "secret", async (err, decodedToken) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
         return res.status(401).json({ error: "Unauthorized" });
       }
@@ -76,7 +75,7 @@ const verifyToken = async (req, res) => {
         message: "Token is valid",
         userId: user.id,
         userName: user.userName,
-        nationalId: user.nationalId,
+        email: user.email,
       });
     });
   } catch (error) {

@@ -33,7 +33,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      tromeBonusId: {
+      bonusId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

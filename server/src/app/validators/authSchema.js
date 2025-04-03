@@ -1,12 +1,9 @@
 const zod = require("zod");
 
 const loginSchema = zod.object({
-  identifier: zod
+  email: zod
     .string({
-      required_error: "Username or Email is required",
-    })
-    .min(3, {
-      message: "Identifier must be at least 3 characters",
+      required_error: "Email is required",
     }),
   password: zod
     .string({

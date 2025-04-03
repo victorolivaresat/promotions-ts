@@ -4,20 +4,23 @@ const Client = require("./Client");
 const Bonus = require("./Bonus");
 const User = require("./User");
 
-// User associations
+// User ↔ BetTicket
 User.hasMany(BetTicket, { foreignKey: 'userId' });
 BetTicket.belongsTo(User, { foreignKey: 'userId' });
 
-// Client associations
+// Client ↔ BetTicket
 Client.hasMany(BetTicket, { foreignKey: 'clientId' });
 BetTicket.belongsTo(Client, { foreignKey: 'clientId' });
 
-// Bonus associations
+// Bonus ↔ BetTicket
 Bonus.hasOne(BetTicket, { foreignKey: 'bonusId' });
 BetTicket.belongsTo(Bonus, { foreignKey: 'bonusId' });
-Bonus.belongsTo(User, { as: 'register', foreignKey: 'registeredBy' });
 
-// ActionLog associations
+// Bonus ↔ User (redeemer)
+Bonus.belongsTo(User, { as: 'redeemer', foreignKey: 'redeemedBy' });
+User.hasMany(Bonus, { foreignKey: 'redeemedBy', as: 'redeemedBonuses' });
+
+// ActionLog ↔ User
 ActionLog.belongsTo(User, { foreignKey: 'userId' });
 User.hasMany(ActionLog, { foreignKey: 'userId' });
 

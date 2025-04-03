@@ -3,7 +3,6 @@ const routes = require("./routes");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const path = require("path");
 const http = require("http");
 require("dotenv").config();
 

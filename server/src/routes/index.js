@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const authRoutes = require('./authRoutes');
+const bonusRoutes = require('./bonusRoutes');
 
 // Home route
 router.get('/', (req, res) => {
@@ -8,6 +9,7 @@ router.get('/', (req, res) => {
 
 // Importing routes
 router.use(authRoutes);
+router.use(bonusRoutes);
 
 
 module.exports = router;

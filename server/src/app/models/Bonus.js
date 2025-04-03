@@ -20,6 +20,14 @@ Bonus.init(
       allowNull: false,
       defaultValue: false,
     },
+    redeemedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
+    },
     redeemedAt: {
       type: DataTypes.DATE,
       allowNull: true,

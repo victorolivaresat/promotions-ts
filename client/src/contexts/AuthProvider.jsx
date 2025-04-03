@@ -1,28 +1,38 @@
-import { AuthContext } from "./client/src/contexts/AuthContextProvider";
-import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
-import * as authApi from "./api/auth";
+import { useNavigate } from "react-router";
+import * as authApi from "../api/auth";
+import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 import cookie from "js-cookie";
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const loginUser = async (identifier, password) => {
+  const loginUser = async (email, password) => {
     try {
-      const data = await authApi.login(identifier, password);
+      const data = await authApi.login(email, password);
       console.log("Datos recibidos del backend:", data);
 
       if (data) {
         const { userId, userName, email, token } = data;
-        console.log("Usuario autenticado:", { userId, userName, email });
-
         setCurrentUser({ userId, userName, email });
         setIsAuthenticated(true);
         cookie.set("token", token);
+        toast.success("¡Bienvenido!");
+        navigate("/");
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error("Credenciales incorrectas");
+      } else if (error.response && error.response.status === 500) {
+        toast.error("Error en el servidor");
+      } else {
+        toast.error("Error desconocido");
+      }
       console.error("Error durante login", error);
     }
   };
@@ -41,9 +51,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       const cookies = cookie.get();
+
+      console.log("Cookies:", cookies.token);
       if (!cookies.token) {
         setIsAuthenticated(false);
         setCurrentUser(null);
+        setLoading(false);
         return;
       }
 
@@ -54,25 +67,21 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        const { userId, userName, nationalId } = res;
-        console.log("Usuario verificado:", { userId, userName, nationalId });
+        const { userId, userName, email } = res;
+        console.log("Usuario verificado:", { userId, userName, email });
 
-        setCurrentUser({ userId, userName, nationalId });
+        setCurrentUser({ userId, userName, email });
         setIsAuthenticated(true);
       } catch (error) {
         console.log(error);
         setIsAuthenticated(false);
         setCurrentUser(null);
+      } finally {
+        setLoading(false);
       }
     };
 
     checkLoginStatus();
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      console.log("AuthProvider se ha desmontado");
-    };
   }, []);
 
   return (
@@ -80,6 +89,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         isAuthenticated,
         currentUser,
+        loading,
         logoutUser,
         loginUser,
       }}
@@ -87,4 +97,8 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
