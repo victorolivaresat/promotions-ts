@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const bonuses = Array.from({ length: 20 }).map((_, i) => ({
+    const bonuses = Array.from({ length: 50 }).map((_, i) => ({
       bonusCode: `TROMAT-${Math.random().toString(36).substring(2, 7)}`,
       isRedeemed: false,
       redeemedAt: null,

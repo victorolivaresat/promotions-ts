@@ -19,12 +19,8 @@ Client.init(
       allowNull: false,
     },
     documentType: {
-      type: DataTypes.ENUM('DNI', 'CE'),
+      type: DataTypes.ENUM('DNI', 'CE', 'PASAPORTE'),
       allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: true,
     },
   },
   {
@@ -32,6 +28,13 @@ Client.init(
     modelName: "Client",
     tableName: "clients",
     timestamps: true,
+    hooks: {
+      beforeSave: (client) => {
+        if (client.fullName) {
+          client.fullName = client.fullName.toUpperCase();
+        }
+      },
+    },
   }
 );
 

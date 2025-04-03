@@ -18,12 +18,8 @@ module.exports = {
         allowNull: false,
       },
       documentType: {
-        type: Sequelize.ENUM('DNI', 'CE'),
+        type: Sequelize.ENUM('DNI', 'CE', 'PASAPORTE'),
         allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DATE,
