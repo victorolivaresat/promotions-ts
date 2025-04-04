@@ -1,0 +1,10 @@
+{
+  "APP_NAME": "promotions-ts",
+  "APP_ENV": "local",
+  "APP_DEBUG": true,
+  "APP_URL": "http://192.168.21.35",
+  "APP_PORT": 9000,
+  "JWT_SECRET": "s3cr3t.k3y.pf",
+  "JWT_EXPIRES_IN": "1d",
+  "CORS_ORIGIN": "http://192.168.21.35:81"
+}
