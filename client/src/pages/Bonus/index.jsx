@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
+import config from "../../../config.json"; // Importar el archivo JSON de configuración
 
 const schema = yup.object().shape({
   bonusCode: yup.string().required('El código del bono es obligatorio'),
@@ -70,7 +71,7 @@ const BonusComponent = () => {
   };
 
   const searchDNI = async (documentNumber) => {
-    const token = import.meta.env.VITE_API_KEY;
+    const token = config.VITE_API_KEY;
     const url = `https://api.apuestatotal.com/v2/dni?dni=${documentNumber}`;
 
     try {
@@ -101,11 +102,11 @@ const BonusComponent = () => {
       title: <strong>Confirmar datos</strong>,
       html: (
         <div>
-          <p><strong>Código del Bono:</strong> {data.bonusCode}</p>
-          <p><strong>Tipo de Documento:</strong> {data.documentType}</p>
-          <p><strong>Número de Documento:</strong> {data.documentNumber}</p>
-          <p><strong>Nombre Completo:</strong> {data.fullName}</p>
-          <p><strong>Código del Ticket:</strong> {data.ticketCode}</p>
+          <p className='text-blue-800'><strong>Cód. del Bono:</strong> {data.bonusCode}</p>
+          <p><strong>Tipo de Doc.:</strong> {data.documentType}</p>
+          <p><strong>N° de Doc.:</strong> {data.documentNumber}</p>
+          <p className='text-red-700'><strong>Nombre:</strong> {data.fullName}</p>
+          <p><strong>Cód. del Ticket:</strong> {data.ticketCode}</p>
         </div>
       ),
       icon: 'info',

@@ -1,9 +1,15 @@
+const { parseISO, startOfDay, endOfDay } = require('date-fns');
 const { BetTicket, Client, Bonus, User } = require('../models');
 const { Op, fn, col, literal } = require('sequelize');
 
-
 const getBonusReport = async (req, res) => {
   try {
+    const { startDate, endDate } = req.query;
+
+    // Convertir las fechas recibidas
+    const start = startOfDay(parseISO(startDate));
+    const end = endOfDay(parseISO(endDate));
+
     const totalBonuses = await Bonus.count();
     const redeemedBonuses = await Bonus.count({ where: { isRedeemed: true } });
     const nonRedeemedBonuses = totalBonuses - redeemedBonuses;
@@ -15,7 +21,7 @@ const getBonusReport = async (req, res) => {
       where: {
         isRedeemed: true,
         redeemedAt: {
-          [Op.ne]: null,
+          [Op.between]: [start, end],
         },
       },
       group: [fn('DATE', col('redeemedAt'))],

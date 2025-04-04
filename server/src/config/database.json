@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "dbapf",
-    "password": "WJZ66$V@eNqCKRGuG*ZY",
+    "username": "postgres",
+    "password": "password",
     "database": "promotions-ts",
-    "host": "192.168.21.35",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "test": {

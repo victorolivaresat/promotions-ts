@@ -1,8 +1,8 @@
 const { createToken } = require("../utils/jwt");
+const config = require("../../app.json");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const config = require("../../config/app.json"); // Cambiar a config
 
 // Login
 const login = async (req, res) => {

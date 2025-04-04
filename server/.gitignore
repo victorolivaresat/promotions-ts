@@ -38,3 +38,5 @@ tmp/
 
 
 iisnode/
+app.json
+src/config/

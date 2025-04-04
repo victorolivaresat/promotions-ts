@@ -16,6 +16,11 @@ const DialyBonus = ({ dailyData }) => {
     markers: {
       size: 5,
       colors: ['#FF4560']
+    },
+    fill : {
+      colors: ['#FF4560'],
+      type: 'solid',
+      opacity: 0.5,
     }
   };
 
@@ -26,7 +31,7 @@ const DialyBonus = ({ dailyData }) => {
 
   return (
     <div>
-      <Chart options={options} series={series} type="line" width="100%" height={250} />
+      <Chart options={options} series={series} type="area" width="100%" height={250} />
     </div>
   );
 };

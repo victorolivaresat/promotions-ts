@@ -70,7 +70,7 @@ const cashInBonus = async (req, res) => {
 
     // 2. Crear o buscar cliente
     let client = await Client.findOne({
-      where: { documentNumber },
+      where: { documentNumber, documentType },
       transaction,
     });
 
@@ -114,7 +114,7 @@ const cashInBonus = async (req, res) => {
         context: {
           bonusCode: bonus.bonusCode,
           ticketCode: ticket.ticketCode,
-          clientId: client.id,
+          clientName: client.fullName,
         },
         timestamp: new Date(),
       },
