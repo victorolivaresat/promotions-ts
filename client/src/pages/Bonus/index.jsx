@@ -5,9 +5,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import config from "../../../app.json";
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
-import config from "../../../config.json"; // Importar el archivo JSON de configuración
 
 const schema = yup.object().shape({
   bonusCode: yup.string().required('El código del bono es obligatorio'),
