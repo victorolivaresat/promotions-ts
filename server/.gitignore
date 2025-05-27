@@ -38,4 +38,5 @@ tmp/
 
 # Archivos de configuración de IIS y Node.js
 iisnode/
-config/app.json
+app.json
+src/config/*.json
