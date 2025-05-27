@@ -1,4 +1,4 @@
-const config = require("../../app.json");
+const config = require("../../config/app.json");
 const jwt = require("jsonwebtoken");
 
 const createToken = (payload) => {

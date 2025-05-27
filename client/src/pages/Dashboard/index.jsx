@@ -46,6 +46,8 @@ const Dashboard = () => {
 
     try {
       const response = await getBonusReport({ startDate, endDate });
+
+      console.log("Datos del reporte:", response.data);
       const {
         totalBonuses,
         redeemedBonuses,

@@ -1,5 +1,5 @@
+const config = require("./config/app.json");
 const cookieParser = require("cookie-parser");
-const config = require("./app.json");
 const routes = require("./routes");
 const express = require("express");
 const morgan = require("morgan");

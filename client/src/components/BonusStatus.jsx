@@ -8,6 +8,11 @@ const BonusStatus = ({ redeemed, nonRedeemed }) => {
       position: 'bottom'
     },
     colors: ['#444', '#FF4560'], 
+    dataLabels: {
+      formatter: function (val) {
+        return val.toFixed(2) + "%";
+      }
+    },
     responsive: [{
       breakpoint: 480,
       options: {
