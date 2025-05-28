@@ -2,8 +2,8 @@ import axios from './axios';
 
 export const cashInBonus = async (formData) => {
   try {
-    const { bonusCode, ...rest } = formData; // Extraer el código del bono y el resto de los datos
-    const response = await axios.post(`/bonuses/${bonusCode}/cash-in`, rest); // Enviar el resto de los datos en el cuerpo
+    const { bonusCode, ...rest } = formData;
+    const response = await axios.post(`/bonuses/${bonusCode}/cash-in`, rest);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error('Error al canjear el bono');
@@ -16,5 +16,14 @@ export const validateBonus = async (bonusCode) => {
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error('Error al validar el bono');
+  }
+};
+
+export const updatedBonusBlocked = async (bonusCode) => {
+  try {
+    const response = await axios.put(`/bonuses/${bonusCode}/unblock`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error('Error al desbloquear el bono');
   }
 };

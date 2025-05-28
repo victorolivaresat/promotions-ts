@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { getBetTicketsReport } from "../api/report";
+import { getBetTicketsReportBlocked } from "../api/report";
 import ExportToExcel from "./ExportToExcel";
 import { format } from "date-fns";
 import {
@@ -10,9 +10,11 @@ import {
   useReactTable,
   flexRender,
 } from "@tanstack/react-table";
+import Swal from "sweetalert2";
+import { updatedBonusBlocked } from "../api/bonus";
 import { FiLoader } from "react-icons/fi";
 
-const Report = () => {
+const BlockedBetTicketsReport = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,32 +26,59 @@ const Report = () => {
       },
       {
         accessorKey: "redeemedBy",
-        header: "Canjeado Por",
+        header: "Validado Por",
       },
       {
         accessorKey: "redeemedAt",
-        header: "Fecha de Canje",
+        header: "Fecha de Validacion",
         cell: ({ getValue }) => {
           const rawDate = getValue();
           return rawDate ? format(new Date(rawDate), "dd/MM/yyyy HH:mm") : "-";
         },
       },
       {
-        accessorKey: "documentNumber",
-        header: "Número de Documento",
+        accessorKey: "blocked",
+        header: "Estado",
+        cell: ({ getValue }) => (getValue() ? "Bloqueado" : "Desbloqueado"),
+
       },
       {
-        accessorKey: "documentType",
-        header: "Tipo de Documento",
-      },
-      {
-        accessorKey: "clientName",
-        header: "Nombre del Cliente",
-      },
-      {
-        accessorKey: "ticketCode",
-        header: "Código del Ticket",
-      },
+        header: "Acciones",
+        cell: ({ row }) => (
+            <div className="flex justify-center">
+            {row.original.blocked ? (
+                <button
+                className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs"
+                onClick={async () => {
+                    const result = await Swal.fire({
+                    title: "¿Desbloquear bono?",
+                    text: `¿Deseas desbloquear el codigo de bono: ${row.original.bonusCode}?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Si, desbloquear",
+                    cancelButtonText: "Cancelar",
+                    });
+                    if (result.isConfirmed) {
+                    try {
+                        await updatedBonusBlocked(row.original.bonusCode);
+                        Swal.fire("Desbloqueado", "El bono fue desbloqueado.", "success");
+                        const response = await getBetTicketsReportBlocked();
+                        setRows(response.data);
+                    } catch (error) {
+                        console.error("Error al desbloquear el bono:", error);
+                    }
+                    }
+                }}
+                >
+                Desbloquear
+                </button>
+            ) : (
+                <span className="text-gray-400 text-xs">-</span>
+            )}
+            </div>
+        ),
+        },
+      
     ],
     []
   );
@@ -58,11 +87,11 @@ const Report = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await getBetTicketsReport();
+        const response = await getBetTicketsReportBlocked();
         setRows(response.data);
       } catch (error) {
         console.error(
-          "Error al obtener el reporte de tickets de apuesta:",
+          "Error al obtener el reporte de bonos bloqueados:",
           error
         );
       } finally {
@@ -84,7 +113,6 @@ const Report = () => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  // Función para formatear filas antes de exportarlas
   const formatRowsForExport = (rows) => {
     return rows.map((row) => {
       const formattedRow = { ...row.original };
@@ -99,7 +127,7 @@ const Report = () => {
     <div className="p-4">
       <div className="mb-4 flex justify-between">
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          Reporte de Tickets de Apuesta
+          Reporte de Bonos Bloqueados
           {loading && (
             <FiLoader className="animate-spin text-blue-500 text-xl" />
           )}
@@ -113,8 +141,8 @@ const Report = () => {
           />
           <ExportToExcel
             data={formatRowsForExport(table.getFilteredRowModel().rows)}
-            fileName="reporte_tickets"
-            sheetName="Tickets"
+            fileName="reporte_bonos_bloqueados"
+            sheetName="BonosBloqueados"
           />
         </div>
       </div>
@@ -162,7 +190,7 @@ const Report = () => {
                     <td
                       key={cell.id}
                       className={`border border-gray-300 px-4 py-2 ${
-                        cell.column.id === "bonusCode" ? "text-green-500" : ""
+                        cell.column.id === "bonusCode" ? "text-red-500" : ""
                       }`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -203,4 +231,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default BlockedBetTicketsReport;

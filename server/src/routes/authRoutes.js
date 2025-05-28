@@ -5,8 +5,8 @@ const router = require('express').Router();
 const { validateSchema } = require('../app/middlewares/validateSchema');
 const { loginSchema } = require("../app/validators/authSchema");
 
-router.post("/auth/login", validateSchema(loginSchema), authController.login);
-router.get("/auth/verify-token", authController.verifyToken);
-router.post("/auth/logout", authController.logout);
+router.post("/login", validateSchema(loginSchema), authController.login);
+router.get("/verify-token", authController.verifyToken);
+router.post("/logout", authController.logout);
 
 module.exports = router;

@@ -6,23 +6,32 @@ const { sequelize } = require("../../config/database");
 
 const validateBonus = async (req, res) => {
   const { code } = req.params;
+  const userId = req.userId;
 
   try {
     const bonus = await Bonus.findOne({ where: { bonusCode: code } });
 
     if (!bonus) {
       return res
-        .status(404)
+        
         .json({ success: false, message: "Bono no encontrado" });
     }
 
     if (bonus.isRedeemed) {
       return res
-        .status(400)
-        .json({ success: false, message: "El bono ya ha sido canjeado" });
+        
+        .json({ success: false, message: "El Bono ya ha sido canjeado" });
     }
 
-    return res.status(200).json({ success: true, message: "Bono válido" });
+    if (bonus.blocked) {
+
+      return res
+      .json({ success: false, message: "El Bono ya esta siendo canjeado por otro usuario"})
+    }
+
+    await bonus.update({ blocked: true, redeemedAt: new Date(), redeemedBy: userId});
+
+    return res.status(200).json({ success: true, message: "Bono valido" });
   } catch (error) {
     console.error("Error al validar el bono:", error);
     return res
@@ -65,12 +74,12 @@ const cashInBonus = async (req, res) => {
       await transaction.rollback();
       return res
         .status(400)
-        .json({ success: false, message: "El bono ya fue canjeado" });
+        .json({ success: false, message: "El Bono ya fue canjeado" });
     }
 
     // 2. Crear o buscar cliente
     let client = await Client.findOne({
-      where: { documentNumber },
+      where: { documentNumber, documentType },
       transaction,
     });
 
@@ -114,7 +123,7 @@ const cashInBonus = async (req, res) => {
         context: {
           bonusCode: bonus.bonusCode,
           ticketCode: ticket.ticketCode,
-          clientId: client.id,
+          clientName: client.fullName,
         },
         timestamp: new Date(),
       },
@@ -143,7 +152,47 @@ const cashInBonus = async (req, res) => {
   }
 };
 
+const updatedBonusBlocked = async (req, res) => {
+  const { code } = req.params;
+
+  try {
+    const bonus = await Bonus.findOne({ where: { bonusCode: code } });
+
+    if (!bonus) {
+      return res.status(404).json({
+        success: false,
+        message: "Bono no encontrado",
+      });
+    }
+
+    if (!bonus.blocked) {
+      return res.status(400).json({
+        success: false,
+        message: "El bono ya esta desbloqueado",
+      });
+    }
+
+    await bonus.update({ blocked: false, redeemedBy: null, redeemedAt: null });
+
+    return res.status(200).json({
+      success: true,
+      message: "Bono desbloqueado correctamente",
+      data: {
+        bonusCode: bonus.bonusCode,
+        blocked: bonus.blocked,
+      },
+    });
+  } catch (error) {
+    console.error("Error al actualizar el estado bloqueado del bono:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error al actualizar el estado bloqueado del bono",
+    });
+  }
+};
+
 module.exports = {
   cashInBonus,
   validateBonus,
+  updatedBonusBlocked,
 };

@@ -32,6 +32,11 @@ Bonus.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    blocked: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,
