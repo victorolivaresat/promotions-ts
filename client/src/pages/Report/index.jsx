@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import BetTickets from "../../components/BetTickets";
+import BlockedBetTickets from "../../components/BlockedBetTickets";
 
 const Dashboard = () => {
   const { hasRole } = useContext(AuthContext);
@@ -12,6 +13,7 @@ const Dashboard = () => {
   return (
     <div className="mt-4 bg-white shadow-md rounded-lg">
       <BetTickets />
+      <BlockedBetTickets />
     </div>
   );
 };

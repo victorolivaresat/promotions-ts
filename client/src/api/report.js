@@ -13,3 +13,9 @@ export const getBetTicketsReport = async () => {
   const response = await axios.get('/reports/bet-tickets');
   return response.data;
 };
+
+// obtener los bonos bloqueados
+export const getBetTicketsReportBlocked = async () => {
+  const response = await axios.get('/reports/bet-tickets-blocked');
+  return response.data;
+};

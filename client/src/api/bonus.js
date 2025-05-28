@@ -18,3 +18,12 @@ export const validateBonus = async (bonusCode) => {
     throw error.response ? error.response.data : new Error('Error al validar el bono');
   }
 };
+
+export const updatedBonusBlocked = async (bonusCode) => {
+  try {
+    const response = await axios.put(`/bonuses/${bonusCode}/unblock`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error('Error al desbloquear el bono');
+  }
+};

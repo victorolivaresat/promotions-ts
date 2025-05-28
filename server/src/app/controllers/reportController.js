@@ -90,11 +90,50 @@ const getBetTicketsReport = async (req, res) => {
         message: `Error al procesar el reporte de tickets de apuesta: ${error.message}`,
       });
     }
-  };
+};
+
+const getBetTicketsReportBlocked = async (req, res) => {
+  try {
+    const bonuses = await Bonus.findAll({
+      where: {
+        blocked: true,
+        isRedeemed: false,
+      },
+      attributes: ['bonusCode','redeemedBy', 'blocked', 'isRedeemed', 'redeemedAt'],
+      include: [
+              {
+                model: User,
+                as: 'redeemer',
+                attributes: ['userName'],
+              },
+            ],
+    });
+
+    const formattedData = bonuses.map((bonus) => ({
+      bonusCode: bonus.bonusCode,
+      redeemedBy: bonus.redeemer?.userName || null,
+      blocked: bonus.blocked,
+      isRedeemed: bonus.isRedeemed,
+      redeemedAt: bonus.redeemedAt,
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: formattedData,
+    });
+  } catch (error) {
+    console.error('Error al obtener el reporte de bonos bloqueados:', error);
+    res.status(500).json({
+      success: false,
+      message: `Error al procesar el reporte de bonos bloqueados: ${error.message}`,
+    });
+  }
+};
 
 module.exports = {
   getBonusReport,
   getBetTicketsReport,
+  getBetTicketsReportBlocked,
 };
 
 

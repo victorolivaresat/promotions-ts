@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import config from "../../../app.json";
+import config from "../../../src/app.json";
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
 
@@ -142,7 +142,7 @@ const BonusComponent = () => {
 
   const onSubmit = async (data) => {
     if (!isBonusValid) {
-      toast.error('El código del bono debe estar validado antes de enviar');
+      toast.error('El codigo del bono debe estar validado antes de enviar');
       return;
     }
 
@@ -174,7 +174,22 @@ const BonusComponent = () => {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Canjear Bono</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold">Canjear Bono</h2>
+        {isBonusValid ? (
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="11" width="14" height="9" rx="2" fill="#ef4444" stroke="#991b1b" strokeWidth="2"/>
+            <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="#991b1b" strokeWidth="2" fill="none"/>
+            <circle cx="12" cy="16" r="1.5" fill="#991b1b"/>
+          </svg>
+        ) : (
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="11" width="14" height="9" rx="2" fill="#22c55e" stroke="#166534" strokeWidth="2"/>
+            <path d="M7 11V8a5 5 0 0 1 10 -3" stroke="#166534" strokeWidth="2" fill="none"/>
+            <circle cx="12" cy="16" r="1.5" fill="#166534"/>
+          </svg>
+        )}
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {[
           { label: 'Código del Bono', name: 'bonusCode', type: 'text', withValidateButton: true, readOnly: isBonusCodeReadOnly },
