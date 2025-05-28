@@ -12,3 +12,8 @@ a.active {
     background-color: #374151;
     color: white;
 }
+
+.active-tab {
+    background-color: #2d3748;
+    color: white;
+}

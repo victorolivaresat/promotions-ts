@@ -26,7 +26,7 @@ const validateBonus = async (req, res) => {
     if (bonus.blocked) {
 
       return res
-      .json({ success: false, message: "El Bono esta siento usado por otro usuario"})
+      .json({ success: false, message: "El Bono ya esta siendo canjeado por otro usuario"})
     }
 
     await bonus.update({ blocked: true, redeemedAt: new Date(), redeemedBy: userId});
