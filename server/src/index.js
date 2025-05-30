@@ -23,10 +23,24 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
+
+console.log(process.env.CORS_ORIGIN || config.CORS_ORIGIN);
+
+const allowedOrigins = config.CORS_ORIGIN;
+
 // Función para habilitar CORS
 app.use(
   cors({
-    origin: config.CORS_ORIGIN,
+    origin: function (origin, callback) {
+    // Permitir solicitudes sin 'origin' como en curl/postman
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("CORS no permitido para este origen"));
+      }
+    },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
