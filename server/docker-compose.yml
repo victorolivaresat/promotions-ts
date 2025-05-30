@@ -1,0 +1,42 @@
+services:
+  # --- PostgreSQL 17 ---
+  db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: promotions-ts
+      POSTGRES_USER: dbapf
+      POSTGRES_PASSWORD: pf_p455w0rd
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dbapf -d promotions-ts -h 127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # --- Node.js Application ---
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development 
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  db_data:
