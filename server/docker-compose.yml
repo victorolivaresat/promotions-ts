@@ -7,6 +7,10 @@ services:
       POSTGRES_DB: promotions-ts
       POSTGRES_USER: dbapf
       POSTGRES_PASSWORD: pf_p455w0rd
+    command:
+      - postgres
+      - -c
+      - timezone=America/Lima
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U dbapf -d promotions-ts -h 127.0.0.1"]
       interval: 5s
