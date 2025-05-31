@@ -27,12 +27,12 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      db:
-         condition: service_healthy
+      db: 
+        condition: service_healthy
     ports:
       - "81:81"
     environment:
-      NODE_ENV: development
+      NODE_ENV: development 
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
