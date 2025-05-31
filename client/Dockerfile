@@ -1,5 +1,5 @@
 # Etapa 1: Build
-FROM node:22.14.0-alpine as build
+FROM node:22.14.0-alpine AS build
 
 # Directorio de trabajo
 WORKDIR /app
