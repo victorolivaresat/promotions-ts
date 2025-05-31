@@ -22,7 +22,7 @@ const validateBonus = async (req, res) => {
       });
     }
 
-    if (bonus.blocked) {
+    if (bonus.blocked && bonus.redeemedBy !== userId) {
       return res.json({
         success: false,
         message: "El Bono ya esta siendo canjeado por otro usuario",
@@ -70,6 +70,15 @@ const cashInBonus = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Bono no encontrado" });
+    }
+
+    // Validar bloqueo
+    if (bonus.blocked && bonus.redeemedBy !== userId) {
+      await transaction.rollback();
+      return res.status(400).json({
+        success: false,
+        message: "El Bono está siendo canjeado por otro usuario",
+      });
     }
 
     if (bonus.isRedeemed) {
