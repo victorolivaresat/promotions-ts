@@ -30,7 +30,7 @@ services:
       db: 
         condition: service_healthy
     ports:
-      - "5000:5000"
+      - "81:81"
     environment:
       NODE_ENV: development 
     restart: unless-stopped
