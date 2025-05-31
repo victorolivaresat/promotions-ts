@@ -12,34 +12,36 @@ const validateBonus = async (req, res) => {
     const bonus = await Bonus.findOne({ where: { bonusCode: code } });
 
     if (!bonus) {
-      return res
-        
-        .json({ success: false, message: "Bono no encontrado" });
+      return res.json({ success: false, message: "Bono no encontrado" });
     }
 
     if (bonus.isRedeemed) {
-      return res
-        
-        .json({ success: false, message: "El Bono ya ha sido canjeado" });
+      return res.json({
+        success: false,
+        message: "El Bono ya ha sido canjeado",
+      });
     }
 
     if (bonus.blocked) {
-
-      return res
-      .json({ success: false, message: "El Bono ya esta siendo canjeado por otro usuario"})
+      return res.json({
+        success: false,
+        message: "El Bono ya esta siendo canjeado por otro usuario",
+      });
     }
 
-    await bonus.update({ blocked: true, redeemedAt: new Date(), redeemedBy: userId});
+    await bonus.update({
+      blocked: true,
+      redeemedAt: new Date(),
+      redeemedBy: userId,
+    });
 
     return res.status(200).json({ success: true, message: "Bono valido" });
   } catch (error) {
     console.error("Error al validar el bono:", error);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error al procesar la validación del bono",
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Error al procesar la validación del bono",
+    });
   }
 };
 
@@ -92,6 +94,20 @@ const cashInBonus = async (req, res) => {
         },
         { transaction }
       );
+    }
+
+    // Validar que el cliente no haya canjeado otro bono
+    const existingTicket = await BetTicket.findOne({
+      where: { clientId: client.id },
+      transaction,
+    });
+
+    if (existingTicket) {
+      await transaction.rollback();
+      return res.status(400).json({
+        success: false,
+        message: "El cliente ya ha canjeado un bono previamente",
+      });
     }
 
     // 3. Registrar ticket
