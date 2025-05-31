@@ -12,8 +12,6 @@ RUN npm ci \
 
 COPY . .
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+EXPOSE 81
+CMD ["npm", "start"]
 
-EXPOSE 5000
-ENTRYPOINT ["/entrypoint.sh"]
